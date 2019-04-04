@@ -1,0 +1,86 @@
+
+* sic dev log
+
+** Axioms
+
+- pair is immutable (except for a few safe optimizations)
+
+
+** Questions
+
+1. Do we need macros? We could just do lazy args.  Is that a good
+   idea?
+   - Nah. Macros are standard for a reason.
+   - Make isMacro() a flag in ~callable~; expand in ~function~
+2. define?  How's that?
+   - toplevel is magical; ~set~ just creates a global
+   - regular contexts get their locals from the context
+     - ~let~ could be a macro and lambda.  Not sure yet.
+3. Should I get rid of the fast append stuff in favour of Lisp-style
+   recreate-the-list append?
+
+
+** Backlog
+
+*** DONE Toplevel contexts
+
+*** DONE Function definition
+
+*** TODO rename map() to basic_map()
+
+*** TODO Macros
+
+- callable object; wraps a function so we can reuse them.
+  - don't like that; make it a callable property?
+- we could totally autoquote; it would make optimization really
+  difficult, though.
+  - okay, let's try that
+  - nope; can't do progn
+  - so macros it is!
+- isMacro as callable property?
+  - macros are invoked at define time
+    - so they need to be defined first
+    - and can be invoked explicitly.
+  - also: I'm going to invoke macros at eval time.
+
+
+*** TODO read; repl
+
+**** TODO read
+
+***** TODO comments ('#' is the comment)
+
+***** TODO reimplement using regexes
+
+**** DONE repl
+
+**** TODO Load and run a file
+
+**** TODO regression tests
+
+
+
+*** TODO defun + lambda
+
+**** TODO handle the case where a lambda is returned
+
+- contexts need to be chained
+  - which means they need to be GC'd
+- so, pointers for everything.
+- parent context is stored in lambda; replaces isLambda flag
+
+
+*** DONE nil should be an instance of a subclass of pair
+
+- so I can store it in pair pointers
+- so car and cdr will work seamlessly
+
+*** TODO builtin call() args should be passed by writable reference
+
+*** TODO Smarter numbers
+
+Currently, it's only integers; need something that starts as int and
+autopromotes to double.
+
+*** TODO garbage collection
+
