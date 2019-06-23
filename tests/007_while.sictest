@@ -1,0 +1,32 @@
+;; Test the 'while' builtin
+
+
+(test "basic while"
+      (let ( (n 0) )
+        ;(print "begin\n")
+        (while (< n 10)
+               ;(print "n=" n "\n")
+               (setq n (+ n 1)))
+        (assert-eq? 10 n)
+        )
+      )
+
+(test "basic one pass"
+      (let ( (n t)
+             (c 0) )
+        (while n
+               (setq c (+ c 1))
+               (setq n nil))
+        (assert-false n)
+        (assert-eq? 1 c)
+        )
+      )
+
+(test "false conditional has zero iterations "
+      (let ( (n 0) )
+        ;(print "begin\n")
+        (while nil
+               (setq n (+ n 1)))
+        (assert-eq? 0 n)
+        )
+      )

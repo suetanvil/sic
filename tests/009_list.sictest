@@ -1,0 +1,60 @@
+;; Test various list functions
+
+
+(test "access lists"
+      (let ( (l1 '(1 2 3 4 5))
+             (l2 '(1 2)) )
+        (assert-eq? 1 (first l1))
+        (assert-eq? 2 (second l1))
+        (assert-eq? 3 (third l1))
+
+        (assert-eq? '(2) (rest l2))
+        (assert-eq? nil (rest (rest l2)))
+        (assert-eq? '(3 4 5) (rest (rest l1)))
+
+        (assert-eq? 3 (nth l1 2))
+        (assert-eq? nil (nth l1 -1))
+        (assert-eq? nil (nth l1 220))
+        (assert-eq? 1 (nth l1 0))
+        (assert-eq? 5 (nth l1 4))
+        )
+      )
+
+(test "invalid accesses"
+      (let ( (l1 '(1 2 3 4 5))
+             (l2 '(1 2)) )
+
+        (assert-eq? nil (first nil))
+        (assert-eq? nil (second nil))
+        (assert-eq? nil (third nil))
+        (assert-eq? nil (rest nil))
+
+        (assert-eq? nil (nth nil 0))
+        (assert-eq? nil (nth nil 1))
+        (assert-eq? nil (nth nil 2))
+        )
+      )
+
+(test "pair creation"
+      (assert-eq? '(1 2 3) (pair 1 (pair 2 (pair 3 nil))))
+      (assert-eq? (list nil) (pair nil nil))
+      (assert-eq? '(1) (pair 1 nil))
+
+      (let ( (notlist (pair 1 (pair 2 (pair 3 4)))) )
+        (assert-eq? 1 (first notlist))
+        )
+      )
+
+(test "llen"
+      (assert-eq? 3 (llen '(3 2 1)))
+      (assert-eq? 2 (llen '(2 1)))
+      (assert-eq? 1 (llen '(1)))
+      (assert-eq? 0 (llen '()))
+      (assert-eq? 0 (llen nil))
+
+      (assert-eq? 0 (llen 42))
+      (assert-eq? 0 (llen "42"))
+      (assert-eq? 0 (llen (lambda () )))
+      )
+
+

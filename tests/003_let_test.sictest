@@ -1,0 +1,87 @@
+;; Test the 'let' builtin
+
+;(setq TEST_EXPECTED_FAILURES 0)
+
+(test "basic let"
+      (let (a (b 42) (c))
+        (assert-eq? a nil)
+        (assert-eq? b 42)
+        (assert-eq? c nil)
+        (let ( (b "test string") )
+          ;(print a b c "\n")
+          (assert-eq? b "test string"))))
+
+
+(test "let with complex initializer"
+      (let ( (a (+ 3 (- 5 1))) )
+        (assert-eq? a 7)))
+
+(test "let with assignments"
+      (let (a (b 42) (c 999))
+        (assert-eq? a nil)
+        (assert-eq? b 42)
+        (assert-eq? c 999)
+
+        (setq a 123)
+        (assert-eq? a 123)
+
+        (let (a)
+          (setq a 777)
+          (assert-eq? a 777))
+
+        (assert-eq? a 123)))
+
+(setq g 42)
+(test "let overrides globals"
+      (assert-eq? g 42)
+      (let ( (g 99) )
+        (assert-eq? g 99))
+
+      ;; We can change the global here
+      (setq g 69)
+      (assert-eq? g 69)
+
+      ;; We can change it in a let but that doesn't affect the global
+      (let ( (g 99) )
+        (assert-eq? g 99)
+        (setq g 111)
+        (assert-eq? g 111))
+      (assert-eq? g 69)
+
+      ;; Unrelated lets let us access the global
+      (let ( (zzz 99) )
+        (assert-eq? g 69)
+        (setq g 77)
+        (assert-eq? g 77))
+      (assert-eq? g 77)
+      )
+
+(test "also, the test block modified the global."
+      (assert-eq? g 77))
+
+(test "let expressions can access previous locals"
+      (let ( (a 1)
+             (b (+ a 2))
+             (c (+ a b))
+             )
+        (assert-eq? 4 c)
+        )
+      )
+
+(test "define bypasses the current scope"
+      (setq g1 42)
+      (setq g2 69)
+      (let ( ( g1 nil )
+             ( g3 123) )
+
+        ;; Initial sanity check
+        (assert-eq? nil g1  "local bypasses global")
+        (assert-eq? 69 g2   "falls to global")
+        (assert-eq? 123 g3)
+
+        (tl-set 'g3 999)
+        (assert-eq? 123 g3  "the local g3 is unchanged")
+        )
+
+      (assert-eq? 999 g3 "the global g3 has now been set")
+      )

@@ -1,0 +1,112 @@
+;; Test the 'lambda' macro
+
+;(setq TEST_EXPECTED_FAILURES 0)
+
+
+(setq a 1)
+(setq b 2)
+
+(test "basic lambda definition"
+      (assert-true ( (lambda () t)) )
+
+      (let ( (f1 (lambda (a) (+ a 1)) ) )
+        (assert-eq? 2 (f1 1))
+        (assert-eq? 9 (f1 8))
+        (assert-eq? 5 (f1 4))
+        )
+
+      )
+
+
+
+(test "lambdas access the local scope."
+      (let ( (x 1)
+             (y 2)
+
+             (f1 (lambda (n) (let ( (zzz x) ) (setq x n) zzz)) )
+             (f2 (lambda () a))
+             )
+        (assert-eq? 1 (f1 999))
+        (assert-eq? 999 x)
+
+        (assert-eq? 1 (f2))
+        )
+      )
+
+
+(test "lambda scopes (still) access the local scope"
+      (setq a 1)
+      (setq b 2)
+      (let ( ( l1 (lambda (a x)
+                    (setq a (+ a x))
+                    (list a b x)))
+             )
+        (assert-eq? 1 a)
+        (assert-eq? 2 b)
+        (assert-eq? '(23 2 3) (l1 20 3))
+        (assert-eq? 1 a)
+        )
+      )
+
+
+(test "lambda scopes nest"
+      (setq a 1)
+      (setq b 2)
+
+      (let ( (c "c")
+             (f1 (lambda (arg1 arg2)
+                   (let (
+                         (f2 (lambda (arg1)
+                               (assert-eq? "outer2" arg2 "outer fn arg")
+                               (assert-eq? "inner1" arg1 "inner fn arg")
+                               
+                               (assert-eq? "c" c "outer scope var")
+                               (setq c "c-modified")
+                               (assert-eq? "c-modified" c "outer scope var modified")
+
+                               (setq arg2 "outer2-modified")
+                               (assert-eq? "outer2-modified" arg2)
+                               )
+                             )
+                         )
+                     (assert-eq? "outer2" arg2)
+                     (f2 "inner1")
+                     (assert-eq? "outer2-modified" arg2)
+                     )))
+             )
+        (f1 "outer1" "outer2")
+        )
+
+      )
+
+(test "lambdas capture the parent scope"
+      (let ( (outer (lambda (n) (lambda () n)) )
+             (fn1 (outer 1))
+             (fn2 (outer 2))
+             (fn3 (outer "3"))
+             )
+        (assert-eq? 1   (fn1))
+        (assert-eq? 2   (fn2))
+        (assert-eq? "3" (fn3))
+        )
+      )
+
+(test "lambdas capture the parent 'let' scope"
+      (let ( (outer (lambda (n) (let ((i n)) (lambda () i))) )
+             (fn1 (outer 1))
+             (fn2 (outer 2))
+             (fn3 (outer "3"))
+             )
+        (assert-eq? 1   (fn1))
+        (assert-eq? 2   (fn2))
+        (assert-eq? "3" (fn3))
+        )
+      )
+
+
+(test "lambdas "
+      )
+
+(test "empty lambda return nil"
+      (assert-false ( (lambda () ) ) )
+      )

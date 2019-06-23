@@ -1,0 +1,11 @@
+
+;; Really minimal test of argv.
+;;
+;; We can't control stdargs from here so all I can do is test if the
+;; first two elements are not nil.
+
+(test "sanity check on argv"
+      (assert-ne? nil (first argv))
+      (assert-ne? nil (second argv))      
+      (assert-eq? nil (third argv))      
+      )

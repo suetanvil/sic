@@ -1,0 +1,25 @@
+
+(defun double (n) (add n n))
+
+(test "basic function definition"
+      (assert-true double)
+      (assert-eq? 4 (double 2))
+      )
+
+
+(defun quadruple (n) (double (double n)))
+
+(test "functions can call one another"
+      (assert-eq? 8 (quadruple 2))
+      )
+
+(test "functions are always defined in the global scope"
+      (let ( (fff nil) )
+        (defun fff () "f f f")
+        )
+      (assert-eq? "f f f" (fff))
+      )
+
+(test "functions can recurse"
+      )
+

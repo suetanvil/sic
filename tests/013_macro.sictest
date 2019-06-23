@@ -1,0 +1,12 @@
+;; Basic tests for macros.  Could probably use more but I don't wanna.
+
+
+(defmacro q3 (a b c) (list quote (list a b c)))
+
+(test "macros don't evaluate their arguments"
+      (assert-eq? '(1 (+ 2 3) (+ 4 5)) (q3 1 (+ 2 3) (+ 4 5)))
+
+      (let ( (lq3 (macro (a b c) (list quote (list a b c)))) )
+        (assert-eq? '(1 (+ 2 3) (+ 4 5)) (lq3 1 (+ 2 3) (+ 4 5)))
+        )
+      )

@@ -1,0 +1,33 @@
+
+;; Print out the prime factors of the number given as an argument.
+
+(defun not-divisible-by? (n d) (!= 0 (% n d)))
+
+(defun first-nontrivial-factor (num)
+  (let ( (divisor 2)
+         (maxdiv (trunc (+ (/ num 2) 2)))
+         )
+    (while (and (<= divisor maxdiv) (not-divisible-by? num divisor))
+      (setq divisor (+ divisor 1))
+      )
+    (if (>= divisor maxdiv)
+        num
+      divisor)
+    )
+  )
+
+
+(defun factor (n)
+  (cond ( (== n 1)  '(1))
+        ( (<= n 3)  (list n 1) )
+        ( t         (let (
+                          (fctr (first-nontrivial-factor n))
+                          )
+                      (pair fctr (factor (/ n fctr))) ))))
+
+
+(if (!= 3 (llen argv))
+    (print "Usage: " (first argv) " " (second argv) " <number>\n")
+  (print (factor (str-to-num (third argv))) "\n")
+  )
+  

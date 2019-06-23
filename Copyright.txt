@@ -1,0 +1,7 @@
+Sic is Copyright (C) 2019 Chris Reuter.
+
+It is released under the terms of the wxWidgets library (see
+docs/wxlicense.txt and replace 'wxWidgets' and related terms with
+'sic').  This license itself is simply the GNU LGPL version 2 (see
+doc/lgpl.txt) with more rights granted.
+

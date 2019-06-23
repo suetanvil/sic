@@ -1,0 +1,22 @@
+;; Given a list of numbers on the command line, compute and print out
+;; their sum.
+
+(defun print-equation (items)
+  (cond
+   ( (not items)            nil)
+   ( (not (rest items))     (progn
+                              (print (first items) " = ")))
+
+   ( t                      (progn
+                              (print (first items) " + ")
+                              (print-equation (rest items))) )
+   )
+  )
+
+(let (
+      (items (rest (rest argv)))
+      (sum   (fold + 0 (map str-to-num items)))
+      )
+  (print-equation items)
+  (print sum "\n")
+  )

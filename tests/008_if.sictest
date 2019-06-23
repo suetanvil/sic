@@ -1,0 +1,36 @@
+;; Test the 'if' builtin
+
+
+(test "basic if"
+      (assert-eq? 42 (if t 42))
+      (assert-eq? 42 (if t 42 69))
+      (assert-eq? 69 (if nil 42 69))
+      (assert-eq? nil (if nil 42))
+      )
+
+
+(test "if with more complex conditional"
+      (assert-eq? 42 (if (< 1 2) 42))
+      (assert-eq? 42 (if (< 1 2) 42 69))
+      (assert-eq? 69 (if (> 1 2) 42 69))
+
+      (assert-eq? 42 (if (< 1 2) (+ 40 2) (- 70 1)))
+      (assert-eq? 69 (if (> 1 2) (- 45 3) (+ 60 9)))
+
+      (assert-eq? nil (if (== 2 1) 42))
+      )
+
+(test "Ensure side-effects happen"
+      (let ( (r "yes")
+             (s nil) )
+        (if (== r "yes")
+            (let ()
+              (setq r "fershure")
+              (setq s "yup"))
+            (setq r "noway"))
+        (assert-eq? "fershure" r)
+        (assert-eq? "yup" s)
+        )
+      )
+
+        

@@ -1,0 +1,63 @@
+;; Test various list functions
+
+;(setq TEST_EXPECTED_FAILURES 1)
+
+(test "cond evaluates the first matching item and returns the result"
+      (assert-eq? 3 (cond (nil 42) (t 3) (nil 69)) )
+      (assert-eq? 42 (cond (t 42) (nil 3) (nil 69)) )
+      (assert-eq? 69 (cond (nil 42) (nil 3) (t 69)) )
+
+      (assert-eq? 1 (cond ((== 1 2) 42) ( (< 2 3) 1 ) ( (== 9 2) 3) ) )
+      )
+
+(test "cond returns the first non-false result if no value expression is given"
+      (assert-eq? 3 (cond (nil 1) (3) (nil 42)) )
+      (assert-eq? "foo" (cond (nil 1) ("foo") (nil 42)) )
+      )
+
+(test "cond does not evaluate the non-matching values and only evaluates the FIRST matching expression"
+      (let ( (status nil) )
+        (cond (nil (setq status 1)) (t (setq status 2)) (nil (setq status 3)) )
+        (assert-eq? status 2)
+        
+        (cond (nil (setq status 1)) (t (setq status 2)) (t (setq status 3)) )
+        (assert-eq? status 2)
+        
+        (cond (t (setq status 1)) (t (setq status 2)) (t (setq status 3)) )
+        (assert-eq? status 1)
+        
+        (cond (t (setq status 1)) (nil (setq status 2)) (t (setq status 3)) )
+        (assert-eq? status 1)
+        )
+      )
+
+(test "cond DOES evaluate all conditional expressions until the first true"
+      (let ( (status 0)
+             (chk (lambda (val) (setq status (+ status 1)) val)) )
+        (assert-eq?
+         42
+         (cond ((chk nil) 0) ((chk nil) 99) ((chk t) 42) ) )
+        (assert-eq? 3 status)
+
+        (setq status 0) 
+        (assert-eq?
+         99
+         (cond ((chk nil) 0) ((chk t) 99) ((chk t) 42) ) )
+        (assert-eq? 2 status)
+        )
+      )
+
+(test "cond returns nil if nothing matches"
+      (assert-eq? nil (cond (nil 1) (nil 2) (nil 3)) )
+      )
+
+(test "empty cond returns nil"
+      (assert-eq? nil (cond))
+      )
+
+; Turns out the bug that prompted this was due to cond dropping
+; the first conditional.
+;; (test "cond fails with a malformed argument list"
+;;       (cond ( (nil 42) (t 3) (nil 69) ) )
+;;       )
+

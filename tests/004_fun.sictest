@@ -1,0 +1,59 @@
+;; Test the 'fun' builtin
+
+;(setq TEST_EXPECTED_FAILURES 0)
+
+
+(setq a 1)
+(setq b 2)
+(setq f1 (fun () (setq a 42)))
+
+(test "basic proc definition"
+      (assert-eq? a 1)
+      (assert-eq? b 2)
+      (f1)
+      (assert-eq? a 42)
+      (assert-eq? b 2)
+      )
+
+
+
+(setq a 1)
+(test "local args are local"
+      (assert-eq? a 1)
+
+      (let ( (f1 (fun (a)
+                      (setq a 999)
+                      (assert-eq? a 999))) )
+        (f1 'x)
+        (assert-eq? a 1))
+      )
+
+(test "functions actually do stuff"
+      (let ( (f1 (fun (a) (+ a a a)) ) )
+        (assert-eq? 3 (f1 1))
+        (assert-eq? 9 (f1 3))
+        )
+      )
+
+
+(setq a 1)
+(test "nested functions still affect the global scope"
+      (assert-eq? 1 a)      
+      (let ( (a 2)  ;; should not be modified by inner and outer
+             (inner
+              (fun ()
+                   (setq a 42)
+                   (assert-eq? a 42)))
+             (outer
+              (fun (iii a) (iii) a) ) )
+        (assert-eq? 2 a)
+        (assert-eq? 33 (outer inner 33))
+        (assert-eq? 2 a)
+        )
+      (assert-eq? 42 a)      
+      )
+
+
+(test "empty functions return nil"
+      (assert-false ( (fun () ) ) )
+      )

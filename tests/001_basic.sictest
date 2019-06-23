@@ -1,0 +1,81 @@
+;; Tests for the testing system
+
+(setq TEST_EXPECTED_FAILURES 9)
+
+(test "testing assert-eq?"
+      (assert-eq? nil nil)
+      (assert-eq? 42 'xxx "expected error"))
+
+(test "testing assert-eq? part 2"
+      (assert-eq? 42 4 "expected error"))
+
+(test "testing assert-true"
+      (assert-true t "should pass")
+      (assert-true (eq? 3 3) "should pass")
+
+      (assert-true nil "expected error"))
+
+(test "testing assert-true (ctd)"
+      (assert-true (eq? 3 4) "expected error")
+      )
+
+(test "assertions without comments"
+      (assert-true t)
+      (assert-eq? 42 42)
+      )
+
+(test "assert-ne?"
+      (assert-ne? 42 0)
+      (assert-ne? 42 "42")
+      (assert-ne? 42 'xxx)
+      (assert-ne? "foo" "bar")
+      (assert-ne? "foo" "foobar")
+      )
+
+(test "assert-ne? part 2"
+      (assert-ne? 42 42 "expected error")
+      )
+
+(test "assert-ne? part 3"
+      (assert-ne? "foobar" "foobar" "expected error")
+      )
+
+
+(test "assert-false"
+      (assert-false nil)
+      )
+
+(test "assert-false #2"
+      (assert-false 42 "should fail")
+      )
+
+(test "assert-false #3"
+      (assert-false t "should fail")
+      )
+
+(test "assert-false #4"
+      (assert-false "yes" "should fail")
+      )
+
+(test "string comparison"
+      (assert-eq? "abc" "abc")
+      (assert-eq? "" "")
+
+      (assert-ne? "" "abc")
+      (assert-ne? "abc" "")
+
+      (assert-ne? "abc" "abcdef")
+      (assert-ne? "abcdef" "abc")
+
+      (assert-ne? "ABC" "abc")
+      (assert-ne? "abc" "ABC")
+      )
+
+(test "inequality"
+      (assert-true (ne? "abc" "def"))
+      (assert-true (!= "abc" "def"))
+      (assert-eq? ne? !=)
+      
+
+
+      )

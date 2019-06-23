@@ -1,7 +1,13 @@
-
 #include "sic.hpp"
 
 using namespace sic;
+
+callable * const quote2 = new builtin(
+    [](std::vector<obj*> args, context*) {
+        return $(quote, $(args[0], args[1]));
+    },
+    2, false, true);
+
 
 static void
 pr(obj *exp) {

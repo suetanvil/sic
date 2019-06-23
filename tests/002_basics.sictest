@@ -1,0 +1,127 @@
+;; Test basic builtin functions.
+
+;(setq TEST_EXPECTED_FAILURES 0)
+
+;(test "nil"  (assert-true t))
+
+(test "progn"
+      (assert-eq? 42 (progn 42))
+      (assert-eq? 42 (progn 9 7 5 4 7 6 33  42))
+      (assert-eq? nil (progn))
+      )
+
+(test "numeric literals"
+      (assert-eq? (- 0 1) -1)
+      (assert-eq? (- 0 2.3) -2.3)
+      (assert-false (> 2 2.1) "testing if floats parse correctly")
+      (assert-false (< -2 -2.1) "testing if floats parse correctly")
+      )
+
+(test "list"
+      (assert-eq? nil (list))
+      (assert-eq? '(42) (list 42))
+      (assert-eq? '(42 99) (list 42 99))
+      (assert-eq? '(42 11) (list 42 (+ 10 1)))
+
+      ;; TODO: some ne assertions.
+
+      )
+
+(test "eq?"
+      ; esp. string eq
+      )
+
+(test "number comparison"
+      (assert-eq? > gt)
+      (assert-eq? >= ge)
+      (assert-eq? < lt)
+      (assert-eq? <= le)
+
+      (assert-true (> 2 1))
+      (assert-false (> 2 2))
+      (assert-false (> 1 2))
+
+      (assert-true (>= 2 1))
+      (assert-true (>= 2 2))
+      (assert-false (>= 1 2))
+
+      (assert-false (< 2 1))
+      (assert-false (< 2 2))
+      (assert-true (< 1 2))
+
+      (assert-false (<= 2 1))
+      (assert-true (<= 2 2))
+      (assert-true (<= 1 2))
+
+      )
+
+(test "str-to-num"
+      (assert-eq? 0 (str-to-num "0"))
+      (assert-eq? 0 (str-to-num "000"))
+
+      (assert-eq? 42 (str-to-num "42"))
+      (assert-eq? 42 (str-to-num "    42"))
+      (assert-eq? 42 (str-to-num "42sdfasdf"))
+
+      (assert-eq? 12.3 (str-to-num "12.3"))
+
+      (assert-eq? (- 0 42) (str-to-num "-42"))
+
+      (assert-eq? nil (str-to-num ""))
+      (assert-eq? nil (str-to-num "Naaaaahn"))
+      (assert-eq? nil (str-to-num "Naaaaahn 42 asdf"))
+      )
+
+(test "eval"
+      (assert-eq? 4 (eval '(+ 2 2)))
+      (assert-eq? 4 (eval 4))
+      (assert-eq? "4" (eval "4"))
+      )
+
+(test "modulo"
+      (assert-eq? 1 (% 5 4))
+      (assert-eq? 1 (mod 5 4))
+      (assert-eq? 0 (mod 8 4))
+      (assert-eq? 0 (mod 8.3 4.9))
+      )
+
+(test "trunc, floor, round, ceil, abs"
+      (assert-eq? 1 (floor 1.9))
+      (assert-eq? -2 (floor -1.9))
+      
+      (assert-eq? 1 (trunc 1.9))
+      (assert-eq? -1 (trunc -1.9))
+      
+      (assert-eq? 2 (ceil 1.9))
+      (assert-eq? 2 (ceil 1.1))
+      (assert-eq? -1 (ceil -1.9))
+
+      (assert-eq? 2 (round 1.9))
+      (assert-eq? 1 (round 1.1))
+
+      (assert-eq? 42 (abs -42))
+      (assert-eq? 42.2 (abs -42.2))
+      (assert-eq? 42 (abs 42))
+      (assert-eq? 0 (abs 0))
+      )
+
+(test "operators are aliases for their respective functions."
+      (assert-eq? + add)
+      (assert-eq? - sub)
+      (assert-eq? * mul)
+      (assert-eq? / div)
+      (assert-eq? % mod)
+      
+      (assert-eq? == eq?)
+      (assert-eq? != ne?)    
+      (assert-eq? ! not)
+      (assert-eq? < lt)
+      (assert-eq? <= le)
+      (assert-eq? > gt)
+      (assert-eq? >= ge)
+      )
+
+(test "other aliases are also as expected."
+      (assert-eq? first car)
+      (assert-eq? rest cdr)
+      )

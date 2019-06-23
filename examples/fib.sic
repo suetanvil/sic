@@ -1,0 +1,10 @@
+
+(defun fib (n)
+  (if (<= n 1)
+      (list 1)
+    (if (== n 2)
+        (list 1 1)
+      (let ( (prev (fib (- n 1))) )
+        (pair (+ (first prev) (second prev)) prev)))))
+
+(print (fib (str-to-num (third argv))) "\n")

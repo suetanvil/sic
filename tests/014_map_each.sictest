@@ -1,0 +1,45 @@
+;; Basic tests for macros.  Could probably use more but I don't wanna.
+
+
+
+(test "each is called once for each item in the list and returns nil"
+      (let ( (t 0)
+             (fn (lambda (n) (setq t (+ t n))))
+             )
+        (assert-eq? nil (each fn '(1 2 3 4 5)) )
+        (assert-eq? 15 t)
+        )
+      )
+
+(test "each does nothing on an empty list."
+      (let ( (t 0)
+             (fn (lambda (n) (setq t (+ t n))))
+             )
+        (assert-eq? nil (each fn '()) )
+        (assert-eq? 0 t)
+        )
+      )
+
+(defun square (n) (* n n))
+
+(test "map returns a list of results or nil on an empty list"
+      (assert-eq? '(1 4 9 16 25)
+                  (map square '(1 2 3 4 5)))
+      )
+
+(test "map returns nil on an empty list."
+      (assert-eq? nil (map square nil))
+      )
+
+(test "fold produces a final summation."
+      (assert-eq? 15    (fold + 1 '(2 3 4 5)))
+      (assert-eq? 120   (fold * 1 '(2 3 4 5)))
+      (assert-eq? 0     (fold * 0 '(1 2 3 4 5)))
+      (assert-eq? '(((((() 1) 2) 3) 4) 5)
+                  (fold list nil '(1 2 3 4 5)))
+      )
+
+(test "fold returns its initial value on an empty list."
+      (assert-eq? 15    (fold + 15 nil))
+      )
+

@@ -1,0 +1,43 @@
+;; Test the 'and' and 'or' control structures
+
+(test "OR returns the first non-false result or nil if there is none"
+      (assert-eq? 1 (or nil nil 1 2 3))
+      (assert-eq? nil (or nil nil nil))
+      )
+
+(test "OR evaluates arguments until the first non-false result"
+      (let ( (status 0)
+             (chk (lambda (val) (setq status (+ status 1)) val)) )
+        (or (chk nil) (chk nil) (chk 42) (chk nil) (chk 99))
+        (assert-eq? 3 status)
+        
+        (setq status 0)
+        (or (chk 1) (chk nil) (chk nil) (chk 42) (chk nil) (chk 99))
+        (assert-eq? 1 status)
+        )
+      )
+
+(test "Empty OR and AND return nil."
+      (assert-eq? nil (or))
+      (assert-eq? nil (and))
+      )
+
+(test "AND returns first nil or last expression."
+      (assert-eq? 4 (and 1 2 3 4))
+      (assert-eq? nil (and 1 2 3 nil 4))
+      (assert-eq? nil (and nil 2 3 4))
+      (assert-eq? nil (and 1 2 3 4 nil))
+      )
+
+(test "AND evaluates until the first false expression is found and then stops"
+      (let ( (status 0)
+             (chk (lambda (val) (setq status (+ status 1)) val)) )
+        (assert-eq? nil (and (chk 1) (chk 2) (chk 3) (chk nil) (chk 4)))
+        (assert-eq? 4 status)
+
+        (setq status 0)
+        (assert-eq? nil (and (chk nil) (chk 2) (chk 3) (chk 5) (chk 4)))
+        (assert-eq? 1 status)
+        )
+      )
+
