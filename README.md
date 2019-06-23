@@ -11,7 +11,7 @@ It seemed like a good idea at the time.
 
 ## What's it good for?
 
-¯\_(ツ)_/¯
+`¯\_(ツ)_/¯`
 
 Also,
 
